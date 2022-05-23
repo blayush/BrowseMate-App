@@ -19,4 +19,19 @@ class HomePageFragment : Fragment() {
         return view
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        binding.homesearchVIew.setOnQueryTextListener(object : androidx.appcompat.widget.SearchView.OnQueryTextListener{
+            override fun onQueryTextSubmit(url: String?): Boolean {
+
+                (requireActivity() as MainActivity).changeTabs(url!!,SurfFragment(url))
+
+                return true
+            }
+
+            override fun onQueryTextChange(p0: String?): Boolean = false
+        })
+    }
+
 }

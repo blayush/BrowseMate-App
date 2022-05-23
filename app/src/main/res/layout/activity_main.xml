@@ -32,6 +32,7 @@
                 android:src="@drawable/ic_search" />
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/topSearchBarInput"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_marginStart="1dp"
@@ -40,9 +41,11 @@
                 android:fontFamily="@font/acme"
                 android:hint="@string/enter_url"
                 android:padding="12dp"
+                android:singleLine="true"
                 android:textColorHint="#757575" />
 
             <ImageButton
+                android:id="@+id/GoButton"
                 android:layout_width="40dp"
                 android:layout_height="match_parent"
                 android:background="?attr/selectableItemBackground"

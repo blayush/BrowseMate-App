@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.browsemate.databinding.FragmentHomePageBinding
+import com.google.android.material.snackbar.Snackbar
 
 
 class HomePageFragment : Fragment() {
@@ -21,17 +22,31 @@ class HomePageFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
+        val mainActivityRef = requireActivity() as MainActivity
+        mainActivityRef.binding.topSearchBarInput.setText("")
+        binding.homesearchVIew.setQuery("",false)
 
         binding.homesearchVIew.setOnQueryTextListener(object : androidx.appcompat.widget.SearchView.OnQueryTextListener{
             override fun onQueryTextSubmit(url: String?): Boolean {
 
-                (requireActivity() as MainActivity).changeTabs(url!!,SurfFragment(url))
+                if(mainActivityRef.checkForInternet(requireContext()))
+                    mainActivityRef.changeTabs(url!!,SurfFragment(url))
+                else
+                    Snackbar.make(binding.root,"Not Connected to Internet \uD83D\uDE10",3500).show()
 
                 return true
             }
 
             override fun onQueryTextChange(p0: String?): Boolean = false
         })
+        mainActivityRef.binding.GoButton.setOnClickListener{
+            if(mainActivityRef.checkForInternet(requireContext()))
+                mainActivityRef.changeTabs(mainActivityRef.binding.topSearchBarInput.text.toString(),SurfFragment(mainActivityRef.binding.topSearchBarInput.text.toString()))
+            else
+                Snackbar.make(binding.root,"Not Connected to Internet \uD83D\uDE10",3500).show()
+
+        }
+        mainActivityRef.binding.topSearchBarInput
     }
 
 }

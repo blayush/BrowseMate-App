@@ -1,6 +1,10 @@
 package com.example.browsemate
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.os.Build
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -11,10 +15,10 @@ import com.example.browsemate.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var binding:ActivityMainBinding
+    lateinit var binding:ActivityMainBinding
     // companion objects are static objects which are only created once through the lifecycle of activity
     companion object{
-        var tabsList:ArrayList<Fragment> = ArrayList()
+        var tabsList : ArrayList<Fragment> = ArrayList()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,6 +33,22 @@ class MainActivity : AppCompatActivity() {
         binding.myPager.isUserInputEnabled = false
     }
 
+    override fun onBackPressed() {
+        var surfFragmentRef:SurfFragment? = null
+        try {
+            surfFragmentRef = tabsList[binding.myPager.currentItem] as SurfFragment
+        }catch (e:Exception){}
+        when{
+            surfFragmentRef?.binding?.webView?.canGoBack() == true -> surfFragmentRef.binding.webView.goBack()
+            binding.myPager.currentItem!=0 -> {
+                tabsList.removeAt(binding.myPager.currentItem)
+                binding.myPager.adapter?.notifyDataSetChanged()
+                binding.myPager.currentItem = tabsList.size - 1
+            }
+            else -> super.onBackPressed()
+        }
+    }
+
     // for ViewPager2
     private inner class TabsAdapter(fa: FragmentManager, lc:Lifecycle) : FragmentStateAdapter(fa,lc) {
         override fun getItemCount(): Int = tabsList.size
@@ -36,10 +56,34 @@ class MainActivity : AppCompatActivity() {
         override fun createFragment(position: Int): Fragment = tabsList[position]
     }
 
+
+    // for changing tabs
     @SuppressLint("NotifyDataSetChanged")
     fun changeTabs(url: String, fragment: Fragment){
         tabsList.add(fragment)
         binding.myPager.adapter?.notifyDataSetChanged()
         binding.myPager.currentItem = tabsList.size - 1
     }
+
+    // for checking internet state
+    fun checkForInternet(context: Context): Boolean {
+        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            val network = connectivityManager.activeNetwork ?: return false
+            val activeNetwork = connectivityManager.getNetworkCapabilities(network) ?: return false
+
+            return when {
+                activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
+                activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
+                else -> false
+            }
+        } else {
+            @Suppress("DEPRECATION") val networkInfo =
+                connectivityManager.activeNetworkInfo ?: return false
+            @Suppress("DEPRECATION")
+            return networkInfo.isConnected
+        }
+    }
+
 }

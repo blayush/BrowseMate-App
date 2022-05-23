@@ -1,18 +1,21 @@
 package com.example.browsemate
 
 import android.annotation.SuppressLint
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.URLUtil
 import android.webkit.WebChromeClient
+import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.fragment.app.Fragment
 import com.example.browsemate.databinding.FragmentSurfBinding
 
 class SurfFragment(private var webUrl : String) : Fragment() {
 
-    private lateinit var binding: FragmentSurfBinding
+    lateinit var binding: FragmentSurfBinding
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -27,15 +30,28 @@ class SurfFragment(private var webUrl : String) : Fragment() {
     override fun onResume() {
         super.onResume()
         binding.webView.apply {
+            val mainActivityRef = requireActivity() as MainActivity
+
 
             settings.javaScriptEnabled = true
             settings.setSupportZoom(true)
             settings.builtInZoomControls = true
             settings.displayZoomControls = false
-            webViewClient = WebViewClient()
+            webViewClient = object : WebViewClient() {
+                override fun doUpdateVisitedHistory(view: WebView?, url: String?, isReload: Boolean) {
+                    super.doUpdateVisitedHistory(view, url, isReload)
+                    mainActivityRef.binding.topSearchBarInput.setTextColor(Color.parseColor("#696969"))
+                    mainActivityRef.binding.topSearchBarInput.setText(url)
+                }
+            }
             webChromeClient = WebChromeClient()
 
-            loadUrl(webUrl)
+            when {
+                URLUtil.isValidUrl(webUrl) -> loadUrl(webUrl)
+                webUrl.contains(".com", ignoreCase = true) -> loadUrl(webUrl)
+                else -> loadUrl("https://www.google.com/search?q=$webUrl")
+            }
+
         }
 
     }

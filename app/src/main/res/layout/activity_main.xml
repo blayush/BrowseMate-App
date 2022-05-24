@@ -12,19 +12,20 @@
         android:layout_height="60dp"
         android:background="@color/my_skyBlue"
         android:orientation="vertical"
-        android:paddingTop="5dp"
-        android:paddingBottom="4dp"
+        android:paddingTop="3dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="52dp"
             android:layout_marginStart="2dp"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:paddingTop="1.8dp">
 
             <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/iconImageView"
                 android:layout_width="35dp"
                 android:layout_height="match_parent"
                 android:paddingLeft="1dp"
@@ -34,15 +35,18 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/topSearchBarInput"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
                 android:layout_marginStart="1dp"
                 android:layout_weight="1"
                 android:background="@drawable/custom_design"
                 android:fontFamily="@font/acme"
                 android:hint="@string/enter_url"
-                android:padding="12dp"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
                 android:singleLine="true"
-                android:textColorHint="#757575" />
+                android:textColorHint="#757575"
+                tools:ignore="TouchTargetSizeCheck" />
 
             <ImageButton
                 android:id="@+id/GoButton"
@@ -56,9 +60,15 @@
         </LinearLayout>
 
         <com.google.android.material.progressindicator.LinearProgressIndicator
+            android:id="@+id/progressBarIndicator"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:scaleY="0.5" />
+            android:paddingTop="1.5dp"
+            android:progressTint="#0E0909"
+            android:scaleY="0.5"
+            android:secondaryProgressTint="#1B0B0B"
+            android:visibility="gone"
+            app:indicatorColor="#0E700A" />
 
     </LinearLayout>
 

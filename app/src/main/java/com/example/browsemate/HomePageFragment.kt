@@ -25,7 +25,7 @@ class HomePageFragment : Fragment() {
         val mainActivityRef = requireActivity() as MainActivity
         mainActivityRef.binding.topSearchBarInput.setText("")
         binding.homesearchVIew.setQuery("",false)
-
+        mainActivityRef.binding.iconImageView.setImageResource(R.drawable.ic_search)
         binding.homesearchVIew.setOnQueryTextListener(object : androidx.appcompat.widget.SearchView.OnQueryTextListener{
             override fun onQueryTextSubmit(url: String?): Boolean {
 

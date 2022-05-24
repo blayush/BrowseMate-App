@@ -1,6 +1,7 @@
 package com.example.browsemate
 
 import android.annotation.SuppressLint
+import android.graphics.Bitmap
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -43,8 +44,44 @@ class SurfFragment(private var webUrl : String) : Fragment() {
                     mainActivityRef.binding.topSearchBarInput.setTextColor(Color.parseColor("#696969"))
                     mainActivityRef.binding.topSearchBarInput.setText(url)
                 }
+
+                override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
+                    super.onPageStarted(view, url, favicon)
+                    mainActivityRef.binding.progressBarIndicator.progress=0
+                    mainActivityRef.binding.progressBarIndicator.visibility=View.VISIBLE
+                }
+
+                override fun onPageFinished(view: WebView?, url: String?) {
+                    super.onPageFinished(view, url)
+                    mainActivityRef.binding.progressBarIndicator.visibility=View.GONE
+                }
             }
-            webChromeClient = WebChromeClient()
+            webChromeClient = object : WebChromeClient(){
+                override fun onShowCustomView(view: View?, callback: CustomViewCallback?) {
+                    super.onShowCustomView(view, callback)
+                    binding.webView.visibility=View.GONE
+                    binding.customView.visibility=View.VISIBLE
+                    binding.customView.addView(view)
+                }
+
+                override fun onHideCustomView() {
+                    super.onHideCustomView()
+                    binding.webView.visibility=View.VISIBLE
+                    binding.customView.visibility=View.GONE
+                }
+
+                override fun onProgressChanged(view: WebView?, newProgress: Int) {
+                    super.onProgressChanged(view, newProgress)
+                    mainActivityRef.binding.progressBarIndicator.progress=newProgress
+                }
+
+                override fun onReceivedIcon(view: WebView?, icon: Bitmap?) {
+                    super.onReceivedIcon(view, icon)
+                    try{
+                        mainActivityRef.binding.iconImageView.setImageBitmap(icon)
+                    }catch (e:Exception){}
+                }
+            }
 
             when {
                 URLUtil.isValidUrl(webUrl) -> loadUrl(webUrl)

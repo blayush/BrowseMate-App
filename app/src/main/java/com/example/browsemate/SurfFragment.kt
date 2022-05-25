@@ -62,6 +62,7 @@ class SurfFragment(private var webUrl : String) : Fragment() {
                     binding.webView.visibility=View.GONE
                     binding.customView.visibility=View.VISIBLE
                     binding.customView.addView(view)
+                    mainActivityRef.binding.root.transitionToEnd()
                 }
 
                 override fun onHideCustomView() {
@@ -75,12 +76,20 @@ class SurfFragment(private var webUrl : String) : Fragment() {
                     mainActivityRef.binding.progressBarIndicator.progress=newProgress
                 }
 
+                @SuppressLint("ClickableViewAccessibility")
                 override fun onReceivedIcon(view: WebView?, icon: Bitmap?) {
                     super.onReceivedIcon(view, icon)
                     try{
                         mainActivityRef.binding.iconImageView.setImageBitmap(icon)
                     }catch (e:Exception){}
+
+                    binding.webView.setOnTouchListener{ _, motionEvent ->
+                        mainActivityRef.binding.root.onTouchEvent(motionEvent)
+                        return@setOnTouchListener false
+                    }
                 }
+
+
             }
 
             when {

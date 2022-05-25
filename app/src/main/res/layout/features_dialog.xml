@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="200dp"
+    android:background="@drawable/dialog_gradient"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/backBtn"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="?attr/selectableItemBackground"
+            android:fontFamily="@font/andada"
+            android:includeFontPadding="true"
+            android:text="@string/back"
+            android:textAllCaps="false"
+            android:textColor="@color/black"
+            android:textColorHint="#9E5A5A"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            app:icon="@drawable/ic_back"
+            app:iconGravity="top"
+            app:iconSize="40dp"
+            app:iconTint="@color/black"
+            app:rippleColor="#2E1313" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/forwardBtn"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="?attr/selectableItemBackground"
+            android:fontFamily="@font/andada"
+            android:includeFontPadding="true"
+            android:text="@string/forward"
+            android:textAllCaps="false"
+            android:textColor="@color/black"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            app:icon="@drawable/ic_forward"
+            app:iconGravity="top"
+            app:iconSize="40dp"
+            app:iconTint="@color/black" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/saveBtn"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="?attr/selectableItemBackground"
+            android:fontFamily="@font/andada"
+            android:includeFontPadding="true"
+            android:text="@string/save"
+            android:textAllCaps="false"
+            android:textColor="@color/black"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            app:icon="@drawable/ic_save"
+            app:iconGravity="top"
+            app:iconSize="40dp"
+            app:iconTint="@color/black" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <com.google.android.material.button.MaterialButton
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="?attr/selectableItemBackground"
+            android:fontFamily="@font/andada"
+            android:text="@string/bookmark"
+            android:textAllCaps="false"
+            android:textColor="@color/black"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            app:icon="@drawable/ic_bookmark"
+            app:iconGravity="top"
+            app:iconSize="40dp"
+            app:iconTint="@color/black" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/desktopBtn"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="?attr/selectableItemBackground"
+            android:fontFamily="@font/andada"
+            android:text="@string/desktop"
+            android:textAllCaps="false"
+            android:textColor="@color/black"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            app:icon="@drawable/ic_desktop"
+            app:iconGravity="top"
+            app:iconSize="40dp"
+            app:iconTint="@color/black" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/fullscreenBtn"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="?attr/selectableItemBackground"
+            android:fontFamily="@font/andada"
+            android:text="@string/fullscreen"
+            android:textAllCaps="false"
+            android:textColor="@color/black"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            app:icon="@drawable/ic_fullscreen"
+            app:iconGravity="top"
+            app:iconSize="40dp"
+            app:iconTint="@color/black" />
+
+
+    </LinearLayout>
+
+</LinearLayout>

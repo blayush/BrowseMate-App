@@ -3,7 +3,10 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/91930/AndroidStudioProjects/BrowseMate/app/src/main/res/drawable/dialog_gradient.xml" value="0.1" />
+        <entry key="..\:/Users/91930/AndroidStudioProjects/BrowseMate/app/src/main/res/drawable/ic_bookmark.xml" value="0.1" />
         <entry key="..\:/Users/91930/AndroidStudioProjects/BrowseMate/app/src/main/res/layout/activity_main.xml" value="0.18309859154929578" />
+        <entry key="..\:/Users/91930/AndroidStudioProjects/BrowseMate/app/src/main/res/layout/features_dialog.xml" value="0.264" />
         <entry key="..\:/Users/91930/AndroidStudioProjects/BrowseMate/app/src/main/res/layout/fragment_browse.xml" value="0.1" />
         <entry key="..\:/Users/91930/AndroidStudioProjects/BrowseMate/app/src/main/res/layout/fragment_home_page.xml" value="0.264" />
         <entry key="..\:/Users/91930/AndroidStudioProjects/BrowseMate/app/src/main/res/layout/fragment_surf.xml" value="0.11041666666666666" />

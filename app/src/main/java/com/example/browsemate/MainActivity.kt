@@ -6,12 +6,15 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
 import android.os.Bundle
+import android.view.Gravity
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.example.browsemate.databinding.ActivityMainBinding
+import com.example.browsemate.databinding.FeaturesDialogBinding
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class MainActivity : AppCompatActivity() {
 
@@ -31,8 +34,11 @@ class MainActivity : AppCompatActivity() {
 
         // to fix left swipe problem
         binding.myPager.isUserInputEnabled = false
+
+        initializeViews()
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun onBackPressed() {
         var surfFragmentRef:SurfFragment? = null
         try {
@@ -86,4 +92,19 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    // to initialize views
+    private fun initializeViews(){
+        binding.settingsButton.setOnClickListener{
+            val view = layoutInflater.inflate(R.layout.features_dialog,binding.root,false)
+            val dialogBinding=FeaturesDialogBinding.bind(view)
+            val dialog = MaterialAlertDialogBuilder(this).setView(view).create()
+
+            dialog.window?.apply {
+                attributes.gravity=Gravity.BOTTOM
+                attributes.y=52
+                //setBackgroundDrawable(ColorDrawable(0xFFFFFFFF.toInt()))
+            }
+            dialog.show()
+        }
+    }
 }

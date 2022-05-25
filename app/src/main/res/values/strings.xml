@@ -3,6 +3,13 @@
     <string name="enter_url">Enter URL</string>
     <string name="go_button">Go Button</string>
     <string name="settings_button">settings button</string>
+    <string name="homePage">HomePage</string>
+    <string name="bookmark">Bookmark</string>
+    <string name="back">Back</string>
+    <string name="forward">Forward</string>
+    <string name="fullscreen">FullScreen</string>
+    <string name="save">Save</string>
+    <string name="desktop">Desktop</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

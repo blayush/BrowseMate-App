@@ -36,6 +36,14 @@ class SurfFragment(private var webUrl : String) : Fragment() {
             settings.builtInZoomControls = true
             settings.displayZoomControls = false
             webViewClient = object : WebViewClient() {
+
+                override fun onLoadResource(view: WebView?, url: String?) {
+                    super.onLoadResource(view, url)
+                    if(MainActivity.desktopModeStatus) evaluateJavascript("document.querySelector('meta[name=\"viewport\"]').setAttribute('content'," +
+                            " 'width=1024px, initial-scale=' + (document.documentElement.clientWidth / 1024));", null)
+
+                    view?.zoomOut()
+                }
                 override fun doUpdateVisitedHistory(view: WebView?, url: String?, isReload: Boolean) {
                     super.doUpdateVisitedHistory(view, url, isReload)
                     mainActivityRef.binding.topSearchBarInput.setTextColor(Color.parseColor("#696969"))

@@ -38,6 +38,7 @@ class MainActivity : AppCompatActivity() {
         var tabsList : ArrayList<Fragment> = ArrayList()
         private var fullScreenStatus: Boolean=false
         var desktopModeStatus: Boolean = false
+        var bookmarkList: ArrayList<Bookmark> = ArrayList()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

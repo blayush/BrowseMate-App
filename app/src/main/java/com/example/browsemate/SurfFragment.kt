@@ -42,12 +42,13 @@ class SurfFragment(private var webUrl : String) : Fragment() {
                     if(MainActivity.desktopModeStatus) evaluateJavascript("document.querySelector('meta[name=\"viewport\"]').setAttribute('content'," +
                             " 'width=1024px, initial-scale=' + (document.documentElement.clientWidth / 1024));", null)
 
-                    view?.zoomOut()
+
                 }
                 override fun doUpdateVisitedHistory(view: WebView?, url: String?, isReload: Boolean) {
                     super.doUpdateVisitedHistory(view, url, isReload)
                     mainActivityRef.binding.topSearchBarInput.setTextColor(Color.parseColor("#696969"))
                     mainActivityRef.binding.topSearchBarInput.setText(url)
+                    binding.webView.zoomOut()
                 }
 
                 override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {

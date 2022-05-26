@@ -10,8 +10,13 @@ import android.print.PrintAttributes
 import android.print.PrintJob
 import android.print.PrintManager
 import android.view.Gravity
+import android.view.WindowManager
 import android.webkit.WebView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
@@ -31,10 +36,15 @@ class MainActivity : AppCompatActivity() {
     // companion objects are static objects which are only created once through the lifecycle of activity
     companion object{
         var tabsList : ArrayList<Fragment> = ArrayList()
+        private var fullScreenStatus: Boolean=false
+        var desktopModeStatus: Boolean = false
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            window.attributes.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
+        }
         binding=ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         tabsList.add(HomePageFragment())
@@ -45,6 +55,7 @@ class MainActivity : AppCompatActivity() {
         binding.myPager.isUserInputEnabled = false
 
         initializeViews()
+        changeFullscreen(false)
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -121,6 +132,16 @@ class MainActivity : AppCompatActivity() {
             }
             dialog.show()
 
+            if(fullScreenStatus){
+                dialogBinding.fullscreenBtn.setIconTintResource(R.color.my_darkRed)
+                dialogBinding.fullscreenBtn.setTextColor(ContextCompat.getColor(this@MainActivity,R.color.my_lightRed))
+            }
+
+            if(desktopModeStatus){
+                dialogBinding.desktopBtn.setIconTintResource(R.color.my_darkRed)
+                dialogBinding.desktopBtn.setTextColor(ContextCompat.getColor(this@MainActivity,R.color.my_lightRed))
+            }
+
             dialogBinding.saveBtn.setOnClickListener {
                 dialog.dismiss()
                 if(surfFragmentRef != null)
@@ -131,12 +152,52 @@ class MainActivity : AppCompatActivity() {
             dialogBinding.backBtn.setOnClickListener{
                 onBackPressed()
             }
+
             dialogBinding.forwardBtn.setOnClickListener {
                 surfFragmentRef?.apply {
                     if(binding.webView.canGoForward())
                         binding.webView.goForward()
                 }
             }
+
+            dialogBinding.desktopBtn.setOnClickListener{
+
+                surfFragmentRef?.binding?.webView?.apply {
+                    desktopModeStatus = if(!desktopModeStatus) {
+                        settings.userAgentString=null
+                        dialogBinding.desktopBtn.setIconTintResource(R.color.my_darkRed)
+                        dialogBinding.desktopBtn.setTextColor(ContextCompat.getColor(this@MainActivity,R.color.my_lightRed))
+                        true
+                    } else {
+                        settings.userAgentString = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Brave Chrome/83.0.4103.116 Safari/537.36"
+                        settings.useWideViewPort=true
+                        evaluateJavascript("document.querySelector('meta[name=\"viewport\"]').setAttribute('content'," +
+                                " 'width=1024px, initial-scale=' + (document.documentElement.clientWidth / 1024));", null)
+                        dialogBinding.desktopBtn.setIconTintResource(R.color.black)
+                        dialogBinding.desktopBtn.setTextColor(ContextCompat.getColor(this@MainActivity,R.color.black))
+                        false
+                    }
+                    reload()
+                    dialog.dismiss()
+                }
+
+            }
+
+            dialogBinding.fullscreenBtn.setOnClickListener{
+                fullScreenStatus = if(!fullScreenStatus) {
+                    changeFullscreen(true)
+                    dialogBinding.fullscreenBtn.setIconTintResource(R.color.my_darkRed)
+                    dialogBinding.fullscreenBtn.setTextColor(ContextCompat.getColor(this,R.color.my_lightRed))
+                    true
+                } else {
+                    changeFullscreen(false)
+                    dialogBinding.fullscreenBtn.setIconTintResource(R.color.black)
+                    dialogBinding.fullscreenBtn.setTextColor(ContextCompat.getColor(this,R.color.black))
+                    false
+                }
+            }
+
+
         }
 
 
@@ -151,4 +212,26 @@ class MainActivity : AppCompatActivity() {
         val printAttributes = PrintAttributes.Builder()
         printJob = pm.print(jobName, printAdapter, printAttributes.build())
     }
+    override fun onResume() {
+        super.onResume()
+        printJob?.let {
+            when{
+                it.isCompleted -> Snackbar.make(binding.root, "Successful -> ${it.info.label}", 4000).show()
+                it.isFailed -> Snackbar.make(binding.root, "Failed -> ${it.info.label}", 4000).show()
+            }
+        }
+    }
+    private fun changeFullscreen(enable: Boolean){
+        if(enable){
+            WindowCompat.setDecorFitsSystemWindows(window, false)
+            WindowInsetsControllerCompat(window, binding.root).let { controller ->
+                controller.hide(WindowInsetsCompat.Type.systemBars())
+                controller.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+            }
+        }else{
+            WindowCompat.setDecorFitsSystemWindows(window, true)
+            WindowInsetsControllerCompat(window, binding.root).show(WindowInsetsCompat.Type.systemBars())
+        }
+    }
+
 }

@@ -6,7 +6,11 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
 import android.os.Bundle
+import android.print.PrintAttributes
+import android.print.PrintJob
+import android.print.PrintManager
 import android.view.Gravity
+import android.webkit.WebView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -15,9 +19,14 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.example.browsemate.databinding.ActivityMainBinding
 import com.example.browsemate.databinding.FeaturesDialogBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
+import java.net.URL
+import java.text.SimpleDateFormat
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
+    private var printJob:PrintJob? = null
     lateinit var binding:ActivityMainBinding
     // companion objects are static objects which are only created once through the lifecycle of activity
     companion object{
@@ -65,7 +74,7 @@ class MainActivity : AppCompatActivity() {
 
     // for changing tabs
     @SuppressLint("NotifyDataSetChanged")
-    fun changeTabs(url: String, fragment: Fragment){
+    fun changeTabs(fragment: Fragment){
         tabsList.add(fragment)
         binding.myPager.adapter?.notifyDataSetChanged()
         binding.myPager.currentItem = tabsList.size - 1
@@ -95,16 +104,51 @@ class MainActivity : AppCompatActivity() {
     // to initialize views
     private fun initializeViews(){
         binding.settingsButton.setOnClickListener{
+
+            var surfFragmentRef:SurfFragment? = null
+            try {
+                surfFragmentRef = tabsList[binding.myPager.currentItem] as SurfFragment
+            }catch (e:Exception){}
+
             val view = layoutInflater.inflate(R.layout.features_dialog,binding.root,false)
             val dialogBinding=FeaturesDialogBinding.bind(view)
             val dialog = MaterialAlertDialogBuilder(this).setView(view).create()
 
             dialog.window?.apply {
                 attributes.gravity=Gravity.BOTTOM
-                attributes.y=52
+                attributes.y=29
                 //setBackgroundDrawable(ColorDrawable(0xFFFFFFFF.toInt()))
             }
             dialog.show()
+
+            dialogBinding.saveBtn.setOnClickListener {
+                dialog.dismiss()
+                if(surfFragmentRef != null)
+                    saveAsPdf(web = surfFragmentRef.binding.webView)
+                else Snackbar.make(binding.root, "No Webpage Opened!\uD83D\uDE03", 3000).show()
+            }
+
+            dialogBinding.backBtn.setOnClickListener{
+                onBackPressed()
+            }
+            dialogBinding.forwardBtn.setOnClickListener {
+                surfFragmentRef?.apply {
+                    if(binding.webView.canGoForward())
+                        binding.webView.goForward()
+                }
+            }
         }
+
+
+    }
+    private  fun saveAsPdf(web: WebView){
+        val pm = getSystemService(Context.PRINT_SERVICE) as PrintManager
+
+        val jobName = "${URL(web.url).host}_${
+            SimpleDateFormat("HH:mm d_MMM_yy", Locale.ENGLISH)
+                .format(Calendar.getInstance().time)}"
+        val printAdapter = web.createPrintDocumentAdapter(jobName)
+        val printAttributes = PrintAttributes.Builder()
+        printJob = pm.print(jobName, printAdapter, printAttributes.build())
     }
 }

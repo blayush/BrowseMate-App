@@ -27,10 +27,10 @@ class HomePageFragment : Fragment() {
         binding.homesearchVIew.setQuery("",false)
         mainActivityRef.binding.iconImageView.setImageResource(R.drawable.ic_search)
         binding.homesearchVIew.setOnQueryTextListener(object : androidx.appcompat.widget.SearchView.OnQueryTextListener{
-            override fun onQueryTextSubmit(url: String?): Boolean {
+            override fun onQueryTextSubmit(url: String): Boolean {
 
                 if(mainActivityRef.checkForInternet(requireContext()))
-                    mainActivityRef.changeTabs(url!!,SurfFragment(url))
+                    mainActivityRef.changeTabs(SurfFragment(url))
                 else
                     Snackbar.make(binding.root,"Not Connected to Internet \uD83D\uDE10",3500).show()
 
@@ -41,7 +41,7 @@ class HomePageFragment : Fragment() {
         })
         mainActivityRef.binding.GoButton.setOnClickListener{
             if(mainActivityRef.checkForInternet(requireContext()))
-                mainActivityRef.changeTabs(mainActivityRef.binding.topSearchBarInput.text.toString(),SurfFragment(mainActivityRef.binding.topSearchBarInput.text.toString()))
+                mainActivityRef.changeTabs(SurfFragment(mainActivityRef.binding.topSearchBarInput.text.toString()))
             else
                 Snackbar.make(binding.root,"Not Connected to Internet \uD83D\uDE10",3500).show()
 
